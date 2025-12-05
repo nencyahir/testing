@@ -12,7 +12,7 @@ RSpec.describe "Api::V1::Employees", type: :request do
         }
       }
 
-      post "/employees", params: params
+      post "/api/v1/employees", params: params
 
       expect(response).to have_http_status(:created)
       json = JSON.parse(response.body)
