@@ -19,11 +19,11 @@ RSpec.describe "Api::V1::Employees", type: :request do
     }
   end
 
-  let!(:created_employee1) { Employee.create!(employee) }
-  let!(:created_employee2) { Employee.create!(employee2) }
-
   describe "GET /api/v1/employees" do
     context "when employees exist" do
+      let!(:created_employee1) { Employee.create!(employee) }
+      let!(:created_employee2) { Employee.create!(employee2) }
+
       it "returns a list of employees with ok status" do
         get "/api/v1/employees"
 
@@ -46,6 +46,33 @@ RSpec.describe "Api::V1::Employees", type: :request do
         json = JSON.parse(response.body)
         expect(json).to be_an(Array)
         expect(json).to be_empty
+      end
+    end
+  end
+
+  describe "GET /api/v1/employees/:id" do
+    let!(:created_employee1) { Employee.create!(employee) }
+    let!(:created_employee2) { Employee.create!(employee2) }
+
+    context "when employee exists" do
+      it "returns the employee with ok status" do
+        get "/api/v1/employees/#{created_employee1.id}"
+
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json["id"]).to eq(created_employee1.id)
+        expect(json["full_name"]).to eq("John Doe")
+        expect(json["job_title"]).to eq("Developer")
+        expect(json["country"]).to eq("India")
+        expect(json["salary"]).to eq("50000.56")
+      end
+    end
+
+    context "when employee does not exist" do
+      it "returns not found status" do
+        get "/api/v1/employees/99999"
+
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
