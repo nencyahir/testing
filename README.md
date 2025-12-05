@@ -1,24 +1,55 @@
-# README
+# Salary API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A RESTful API for managing employees and calculating salary metrics.
 
-Things you may want to cover:
+## Setup
 
-* Ruby version
+1. Install dependencies:
+   ```bash
+   bundle install
+   ```
 
-* System dependencies
+2. Setup database:
+   ```bash
+   rails db:create
+   rails db:migrate
+   ```
 
-* Configuration
+3. Start the server:
+   ```bash
+   rails server
+   ```
 
-* Database creation
+## API Endpoints
 
-* Database initialization
+### Employees
 
-* How to run the test suite
+- `GET /api/v1/employees` - List all employees
+- `GET /api/v1/employees/:id` - Show an employee
+- `POST /api/v1/employees` - Create an employee
+- `DELETE /api/v1/employees/:id` - Delete an employee
+- `GET /api/v1/employees/:id/salary` - Calculate salary with deductions
 
-* Services (job queues, cache servers, search engines, etc.)
+### Salary Metrics
 
-* Deployment instructions
+- `GET /api/v1/salaries/country?country=India` - Get salary metrics by country
+- `GET /api/v1/salaries/job_title?title=Developer` - Get average salary by job title
 
-* ...
+## Testing
+
+Run the test suite:
+```bash
+bundle exec rspec
+```
+
+Run RuboCop:
+```bash
+bin/rubocop
+```
+
+## Tech Stack
+
+- Ruby on Rails 8.0
+- SQLite3
+- RSpec
+- RuboCop
