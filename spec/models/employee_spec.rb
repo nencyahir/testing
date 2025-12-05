@@ -1,25 +1,23 @@
 require "rails_helper"
 
 RSpec.describe Employee, type: :model do
-  describe "validations" do
-    it "requires full_name" do
-      employee = Employee.new(full_name: nil)
-      expect(employee.valid?).to be false
-    end
+  subject do
+    described_class.new(
+      full_name: "John Doe",
+      job_title: "Developer",
+      country: "India",
+      salary: 50000
+    )
   end
 
-    it "requires job_title" do
-      employee = Employee.new(job_title: nil)
-      expect(employee.valid?).to be false
-    end
+  describe "validations" do
+    it { should validate_presence_of(:full_name) }
+    it { should validate_presence_of(:job_title) }
+    it { should validate_presence_of(:country) }
+    it { should validate_presence_of(:salary) }
 
-    it "requires country" do
-      employee = Employee.new(country: nil)
-      expect(employee.valid?).to be false
+    it "is valid with all required attributes" do
+      expect(subject).to be_valid
     end
-
-    it "requires salary" do
-      employee = Employee.new(salary: nil)
-      expect(employee.valid?).to be false
-    end
+  end
 end
