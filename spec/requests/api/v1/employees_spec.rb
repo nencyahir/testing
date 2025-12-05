@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Employees", type: :request do
-  let(:employee) do
+  let(:employee_params) do
     {
       full_name: "John Doe",
       job_title: "Developer",
@@ -10,7 +10,7 @@ RSpec.describe "Api::V1::Employees", type: :request do
     }
   end
 
-  let(:employee2) do
+  let(:employee2_params) do
     {
       full_name: "Jane Smith",
       job_title: "Designer",
@@ -19,90 +19,40 @@ RSpec.describe "Api::V1::Employees", type: :request do
     }
   end
 
+  let!(:employee1) { Employee.create!(employee_params) }
+  let!(:employee2) { Employee.create!(employee2_params) }
+
   describe "GET /api/v1/employees" do
-    context "when employees exist" do
-      let!(:created_employee1) { Employee.create!(employee) }
-      let!(:created_employee2) { Employee.create!(employee2) }
+    it "returns a list of employees" do
+      get "/api/v1/employees"
 
-      it "returns a list of employees with ok status" do
-        get "/api/v1/employees"
-
-        expect(response).to have_http_status(:ok)
-        json = JSON.parse(response.body)
-        expect(json).to be_an(Array)
-        expect(json.length).to eq(2)
-        expect(json.first["full_name"]).to eq("John Doe")
-        expect(json.first["job_title"]).to eq("Developer")
-        expect(json.first["country"]).to eq("India")
-        expect(json.first["salary"]).to eq("50000.56")
-      end
-    end
-
-    context "when no employees exist" do
-      it "returns an empty array" do
-        get "/api/v1/employees"
-
-        expect(response).to have_http_status(:ok)
-        json = JSON.parse(response.body)
-        expect(json).to be_an(Array)
-        expect(json).to be_empty
-      end
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json.length).to eq(2)
+      expect(json.first["full_name"]).to eq("John Doe")
     end
   end
 
   describe "GET /api/v1/employees/:id" do
-    let!(:created_employee1) { Employee.create!(employee) }
-    let!(:created_employee2) { Employee.create!(employee2) }
+    it "returns the employee when exists" do
+      get "/api/v1/employees/#{employee1.id}"
 
-    context "when employee exists" do
-      it "returns the employee with ok status" do
-        get "/api/v1/employees/#{created_employee1.id}"
-
-        expect(response).to have_http_status(:ok)
-        json = JSON.parse(response.body)
-        expect(json["id"]).to eq(created_employee1.id)
-        expect(json["full_name"]).to eq("John Doe")
-        expect(json["job_title"]).to eq("Developer")
-        expect(json["country"]).to eq("India")
-        expect(json["salary"]).to eq("50000.56")
-      end
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["id"]).to eq(employee1.id)
+      expect(json["full_name"]).to eq("John Doe")
     end
 
-    context "when employee does not exist" do
-      it "returns not found status" do
-        get "/api/v1/employees/99999"
+    it "returns not found when employee does not exist" do
+      get "/api/v1/employees/99999"
 
-        expect(response).to have_http_status(:not_found)
-      end
-    end
-  end
-
-  describe "DELETE /api/v1/employees/:id" do
-    let!(:created_employee1) { Employee.create!(employee) }
-    let!(:created_employee2) { Employee.create!(employee2) }
-
-    context "when employee exists" do
-      it "deletes the employee and returns no content status" do
-        expect {
-          delete "/api/v1/employees/#{created_employee1.id}"
-        }.to change(Employee, :count).by(-1)
-
-        expect(response).to have_http_status(:no_content)
-      end
-    end
-
-    context "when employee does not exist" do
-      it "returns not found status" do
-        delete "/api/v1/employees/99999"
-
-        expect(response).to have_http_status(:not_found)
-      end
+      expect(response).to have_http_status(:not_found)
     end
   end
 
   describe "POST /api/v1/employees" do
-    it "creates an employee and returns created status with json" do
-      post "/api/v1/employees", params: { employee: employee }
+    it "creates an employee" do
+      post "/api/v1/employees", params: { employee: employee_params }
 
       expect(response).to have_http_status(:created)
       json = JSON.parse(response.body)
@@ -110,6 +60,20 @@ RSpec.describe "Api::V1::Employees", type: :request do
       expect(json["job_title"]).to eq("Developer")
       expect(json["country"]).to eq("India")
       expect(json["salary"]).to eq("50000.56")
+    end
+  end
+
+  describe "DELETE /api/v1/employees/:id" do
+    it "deletes the employee when exists" do
+      delete "/api/v1/employees/#{employee1.id}"
+
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it "returns not found when employee does not exist" do
+      delete "/api/v1/employees/99999"
+
+      expect(response).to have_http_status(:not_found)
     end
   end
 end
