@@ -77,6 +77,29 @@ RSpec.describe "Api::V1::Employees", type: :request do
     end
   end
 
+  describe "DELETE /api/v1/employees/:id" do
+    let!(:created_employee1) { Employee.create!(employee) }
+    let!(:created_employee2) { Employee.create!(employee2) }
+
+    context "when employee exists" do
+      it "deletes the employee and returns no content status" do
+        expect {
+          delete "/api/v1/employees/#{created_employee1.id}"
+        }.to change(Employee, :count).by(-1)
+
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+
+    context "when employee does not exist" do
+      it "returns not found status" do
+        delete "/api/v1/employees/99999"
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe "POST /api/v1/employees" do
     it "creates an employee and returns created status with json" do
       post "/api/v1/employees", params: { employee: employee }
