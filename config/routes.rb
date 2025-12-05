@@ -6,6 +6,8 @@ Rails.application.routes.draw do
           get :salary
         end
       end
+      get "salaries/country", to: "salaries#country"
+      get "salaries/job_title", to: "salaries#job_title"
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
