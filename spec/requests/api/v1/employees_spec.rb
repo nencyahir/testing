@@ -38,7 +38,7 @@ RSpec.describe "Api::V1::Employees", type: :request do
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
-      expect(json.length).to eq(2)
+      expect(json.length).to eq(3)
       expect(json.first["full_name"]).to eq("John Doe")
     end
   end
@@ -96,7 +96,7 @@ RSpec.describe "Api::V1::Employees", type: :request do
         json = JSON.parse(response.body)
         expect(json["gross_salary"]).to eq("50000.56")
         expect(json["tds"]).to eq("5000.06")
-        expect(json["net_salary"]).to eq("45000.5")
+        expect(json["net_salary"]).to eq("45000.50")
       end
     end
 
@@ -118,9 +118,9 @@ RSpec.describe "Api::V1::Employees", type: :request do
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
-        expect(json["gross_salary"]).to eq("70000.0")
-        expect(json["tds"]).to eq("0.0")
-        expect(json["net_salary"]).to eq("70000.0")
+        expect(json["gross_salary"]).to eq("70000.00")
+        expect(json["tds"]).to eq("0.00")
+        expect(json["net_salary"]).to eq("70000.00")
       end
     end
 
