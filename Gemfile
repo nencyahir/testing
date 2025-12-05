@@ -47,7 +47,7 @@ group :development, :test do
   # Ruby static code analyzer and formatter
   gem "rubocop", require: false
 
-  gem "shoulda-matchers", "~> 6.0"
+  gem "shoulda-matchers", "~> 7.0"
 end
 
 gem "rspec-rails", "~> 8.0"
