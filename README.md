@@ -32,8 +32,8 @@ A RESTful API for managing employees and calculating salary metrics.
 
 ### Salary Metrics
 
-- `GET /api/v1/salaries/country?country=India` - Get salary metrics by country
-- `GET /api/v1/salaries/job_title?title=Developer` - Get average salary by job title
+- `GET /api/v1/salaries/country?country={country_name}` - Get salary metrics by country
+- `GET /api/v1/salaries/job_title?title={job_title}` - Get average salary by job title
 
 ## Testing
 
@@ -49,7 +49,8 @@ bin/rubocop
 
 ## Tech Stack
 
-- Ruby on Rails 8.0
+- Ruby 3.4.7
+- Rails 8.0.4
 - SQLite3
 - RSpec
 - RuboCop
